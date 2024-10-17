@@ -186,35 +186,24 @@ function getModelViewMatrix() {
  * The next 5 seconds, the cube should return to its initial position.
  */
 
-const initialMatrix = new Float32Array([
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, 1
-]);
-
-I = createIdentityMatrix();
-X = createRotationMatrix_X(0.523599);
-Y = createRotationMatrix_Y(0.785398);
-Z = createRotationMatrix_Z(1.0472);
-S = createScaleMatrix(0.5,0.5,1);
-T = createTranslationMatrix(0.3,-0.25,0);
-
-R = multiplyMatrices(multiplyMatrices(multiplyMatrices(I,X),Y),Z);
-
-const targetMatrix = multiplyMatrices(multiplyMatrices(R, S), T);
-
-function lerpMatrix(a, b, t) {
-    const result = new Float32Array(16);
-    for (let i = 0; i < 16; i++) {
-        result[i] = a[i] * (1 - t) + b[i] * t;
-    }
-    return result;
-}
-
 function getPeriodicMovement(startTime) {
     // this metdo should return the model view matrix at the given time
     // to get a smooth animation
+    const initialMatrix = new Float32Array([
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    ]);
+    const targetMatrix = getModelViewMatrix()
+    function lerpMatrix(a, b, t) {
+        const result = new Float32Array(16);
+        for (let i = 0; i < 16; i++) {
+            result[i] = a[i] * (1 - t) + b[i] * t;
+        }
+        return result;
+    }
+
     let currentTime = Date.now() - startTime;
     const cycleTime = 10000;
     const t = (currentTime % cycleTime) / cycleTime;
